@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ledger Book</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            color: #333;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4CAF50;
+        }
+
+        /* Container for Form and Table */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* Form Styles */
+        .book {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            flex: 1 1 200px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            height: 45px;
+            padding: 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            font-size: 16px;
+        }
+
+        /* Checkbox Group Styles */
+        .checkbox-group {
+            flex: 1 1 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            background-color: #f1f1f1;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 16px;
+            user-select: none;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkbox-group label::before {
+            content: '';
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            border: 2px solid #4CAF50;
+            border-radius: 4px;
+            background-color: #fff;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .checkbox-group input[type="checkbox"]:checked + label::before {
+            background-color: #4CAF50;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23fff" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M6 10.793L3.146 7.939a1 1 0 10-1.414 1.414l3.5 3.5a1 1 0 001.414 0l7-7a1 1 0 00-1.414-1.414L6 10.793z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 12px 12px;
+            border-color: #4CAF50;
+        }
+
+        .checkbox-group label:hover {
+            background-color: #e2e6ea;
+            transform: translateY(-2px);
+        }
+
+        /* Add Button Styles */
+        .add-button-container {
+            flex: 1 1 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .book button {
+            width: 150px;
+            height: 45px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .book button:hover {
+            background-color: #218838;
+        }
+
+        /* Table Styles */
+        .res {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        thead {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .book {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            th,
+            td {
+                padding: 10px;
+            }
+
+            .form-group {
+                flex: 1 1 100%;
+            }
+
+            .checkbox-group {
+                flex-direction: column;
+            }
+
+            .add-button-container {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            th,
+            td {
+                padding: 8px;
+                font-size: 14px;
+            }
+
+            .form-group input,
+            .form-group select {
+                height: 40px;
+                font-size: 14px;
+                padding: 6px 10px;
+            }
+
+            .checkbox-group label {
+                font-size: 14px;
+                padding: 6px 10px;
+            }
+
+            .checkbox-group label::before {
+                width: 16px;
+                height: 16px;
+            }
+
+            .book button {
+                width: 100%;
+                height: 40px;
+                font-size: 14px;
+                padding: 6px 10px;
+            }
+
+            .delete-btn {
+                padding: 4px 8px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Ledger Book</h1>
+    <div class="container">
+        <div class="book">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" placeholder="Enter Name" class="text">
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="number" id="amount" placeholder="Enter Amount" class="number">
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="tea" name="category" value="Tea">
+                <label for="tea">Tea</label>
+
+                <input type="checkbox" id="coffee" name="category" value="Coffee">
+                <label for="coffee">Coffee</label>
+
+                <input type="checkbox" id="cigarette" name="category" value="Cigarette">
+                <label for="cigarette">Cigarette</label>
+
+                <input type="checkbox" id="raw-materials" name="category" value="Raw Materials">
+                <label for="raw-materials">Raw Materials</label>
+
+                <input type="checkbox" id="other" name="category" value="Other">
+                <label for="other">Other</label>
+            </div>
+            <div class="form-group">
+                <label for="type">Type</label>
+                <select id="type" class="two">
+                    <option value="">Select Type</option>
+                    <option>Income</option>
+                    <option>Outcome</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" class="date">
+            </div>
+            <div class="add-button-container">
+                <!-- Set button type to 'button' to prevent form submission -->
+                <button type="button" class="add">Add</button>
+            </div>
+        </div>
+        <div class="res">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Net</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="ledger-body">
+                    <!-- Dynamic Rows Will Appear Here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Select Elements
+        const text = document.querySelector(".text");
+        const number = document.querySelector(".number");
+        const op2 = document.querySelector(".two");
+        const date = document.querySelector(".date");
+        const btn = document.querySelector(".add");
+        const tbody = document.getElementById("ledger-body");
+
+        // Select all category checkboxes
+        const categoryCheckboxes = document.querySelectorAll('input[name="category"]');
+
+        // Initialize Variables
+        let num = 1;
+        let bill = 0;
+
+        // Load Data from localStorage on Page Load
+        document.addEventListener("DOMContentLoaded", loadData);
+
+        function loadData() {
+            const data = JSON.parse(localStorage.getItem("ledgerData")) || [];
+            console.log("Loaded data from localStorage:", data); // Debugging
+
+            // Reset the table and variables
+            tbody.innerHTML = "";
+            num = 1;
+            bill = 0;
+
+            data.forEach(entry => {
+                addRow(entry);
+            });
+        }
+
+        // Save Data to localStorage
+        function saveData(entry) {
+            const data = JSON.parse(localStorage.getItem("ledgerData")) || [];
+            data.push(entry);
+            localStorage.setItem("ledgerData", JSON.stringify(data));
+            console.log("Saved data to localStorage:", data); // Debugging
+        }
+
+        // Remove Data from localStorage
+        function removeData(index) {
+            const data = JSON.parse(localStorage.getItem("ledgerData")) || [];
+            if (index > -1 && index < data.length) {
+                data.splice(index, 1);
+                localStorage.setItem("ledgerData", JSON.stringify(data));
+                console.log("Removed data from localStorage:", data); // Debugging
+            }
+        }
+
+        // Add Event Listener to Add Button
+        btn.addEventListener("click", () => {
+            if (
+                text.value.trim() === "" ||
+                number.value.trim() === "" ||
+                getSelectedCategories().length === 0 ||
+                op2.value === ""
+            ) {
+                alert("Please provide valid inputs.");
+                return;
+            }
+
+            const entry = {
+                name: text.value.trim(),
+                amount: parseFloat(number.value),
+                category: getSelectedCategories(), // Array of selected categories
+                type: op2.value,
+                date: date.value
+            };
+
+            addRow(entry);
+            saveData(entry);
+
+            // Reset Form Fields
+            text.value = "";
+            number.value = "";
+            categoryCheckboxes.forEach(cb => cb.checked = false);
+            op2.value = "";
+            date.value = "";
+        });
+
+        // Function to Get Selected Categories
+        function getSelectedCategories() {
+            const selected = [];
+            categoryCheckboxes.forEach(cb => {
+                if (cb.checked) {
+                    selected.push(cb.value);
+                }
+            });
+            return selected;
+        }
+
+        // Function to Add a Row to the Table
+        function addRow(entry) {
+            const tr = document.createElement("tr");
+
+            // Set background color based on type
+            if (entry.type === "Income") {
+                tr.style.backgroundColor = "#d1e7dd"; // Light Green for Income
+            } else if (entry.type === "Outcome") {
+                tr.style.backgroundColor = "#f8d7da"; // Light Red for Outcome
+            }
+
+            // No.
+            const tdNo = document.createElement("td");
+            tdNo.textContent = num++;
+            tr.appendChild(tdNo);
+
+            // Date
+            const tdDate = document.createElement("td");
+            tdDate.textContent = entry.date || "N/A";
+            tr.appendChild(tdDate);
+
+            // Name
+            const tdName = document.createElement("td");
+            tdName.textContent = entry.name;
+            tr.appendChild(tdName);
+
+            // Category (join multiple categories with commas)
+            const tdCategory = document.createElement("td");
+            tdCategory.textContent = entry.category.join(", ");
+            tr.appendChild(tdCategory);
+
+            // Type
+            const tdType = document.createElement("td");
+            tdType.textContent = entry.type;
+            tr.appendChild(tdType);
+
+            // Amount
+            const tdAmount = document.createElement("td");
+            tdAmount.textContent = entry.amount.toFixed(2);
+            tr.appendChild(tdAmount);
+
+            // Net
+            const tdNet = document.createElement("td");
+            bill += entry.type === "Income" ? entry.amount : -entry.amount;
+            tdNet.textContent = bill.toFixed(2);
+            tr.appendChild(tdNet);
+
+            // Action
+            const tdAction = document.createElement("td");
+            const delBtn = document.createElement("button");
+            delBtn.textContent = "Delete";
+            delBtn.classList.add("delete-btn");
+            tdAction.appendChild(delBtn);
+            tr.appendChild(tdAction);
+
+            // Append Row to Table Body
+            tbody.appendChild(tr);
+
+            // Add Event Listener to Delete Button
+            delBtn.addEventListener("click", () => {
+                const index = Array.from(tbody.children).indexOf(tr);
+                removeData(index);
+                tr.remove();
+                updateNet();
+            });
+        }
+
+        // Function to Update Net Total After Deletion
+        function updateNet() {
+            const data = JSON.parse(localStorage.getItem("ledgerData")) || [];
+            bill = 0;
+            num = 1;
+            tbody.innerHTML = "";
+
+            data.forEach(entry => {
+                addRow(entry);
+            });
+        }
+    </script>
+</body>
+
+</html>
