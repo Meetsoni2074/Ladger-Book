@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ledger Book</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <!-- Header Image -->
+    <div class="header-image">
+        <img src="luxury.jpg" alt="Ledger Book Logo"> <!-- Replace with your header image URL -->
+    </div>
+
+    <!-- Header Title -->
+    <h1>Ledger Book</h1>
+
+    <div class="container">
+        <div class="book">
+            <!-- Name and Amount -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" placeholder="Enter Name" class="text">
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input type="number" id="amount" placeholder="Enter Amount" class="number">
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" placeholder="Write Your Credit And Debit Entries Here"></textarea>
+            </div>
+
+            <!-- Type and Date -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="type">Type</label>
+                    <select id="type" class="two">
+                        <option value="">Select Type</option>
+                        <option>Income</option>
+                        <option>Outcome</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" class="date">
+                </div>
+            </div>
+
+            <!-- Add Button -->
+            <div class="add-button-container">
+                <button type="button" class="add">Add</button>
+            </div>
+        </div>
+
+        <!-- Result Table -->
+        <div class="res">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Net</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="ledger-body">
+                    <!-- Dynamic Rows Will Appear Here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
